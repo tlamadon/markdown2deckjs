@@ -24,12 +24,20 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
         return root
 
     def create_effects(self, root):
-        if root.tail and root.tail[-1] == '~':
-            root.tail = root.tail[:-1]
+        #print str(root.tail)
+#        if root.tail and root.tail[-1] == '~':
+#            root.tail = root.tail[:-1]
+#            root.set('class', 'slide')
+#        elif root.text and root.text[-1] == '~':
+#            root.text = root.text[:-1]
+#            root.set('class', 'slide')
+        if root.tail and root.tail[0] == '~':
+            root.tail = root.tail[1:]
             root.set('class', 'slide')
-        elif root.text and root.text[-1] == '~':
-            root.text = root.text[:-1]
+        elif root.text and root.text[0] == '~':
+            root.text = root.text[1:]
             root.set('class', 'slide')
+
         for c in root:
             c = self.create_effects(c)
         return root
