@@ -7,6 +7,7 @@ import codecs
 from optparse import OptionParser
 import re
 import mdx_slider
+import mdx_mathjax
 
 parser = OptionParser()
 parser.add_option("-p", "--plain", action="store_true", dest="plain",

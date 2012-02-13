@@ -1,12 +1,18 @@
 # markdown2deckjs
 
-Author: Ulf Bögeholz
+Modified: Thibaut Lamadon
 
 Version: 0.1 | 2011/09/21
 
 ## What is this?
 
-After I saw deck.js recently, I immediatelly liked the look and feel of it. What I did not like was to generate HTML slides by hand. I surfed around a bit and quickly found out that there was a nice markdown library for python. Playing around (and not sleeping instead) quickly showed results. Voila.
+This is a simple modification of Ulf Bögeholz version. 
+I just added support for math with MathJax. I am leaving most of the author's comment.
+
+After I saw deck.js recently, I immediatelly liked the look and feel of it. 
+What I did not like was to generate HTML slides by hand. I surfed around a bit and quickly found 
+out that there was a nice markdown library for python. Playing around (and not sleeping instead) 
+quickly showed results. Voila.
 
 ## Dependencies
 
@@ -40,13 +46,21 @@ Every time the markdown contains a H1 or H2 (#, ##), a new slide will be created
 
     # Title Slide
 	
-	## First Content Slide
-	This is nice
+	  ## First Content Slide
+	  This is nice
 	
-	## Second Content Slide
-	This too
+	  ## Second Content Slide
+	  This too
 
-will result in a three-slide presentation. Try it:
+    ## Slide with some math
+    
+      - Here it is $\alpha$
+      - ~ And more $\int x dx$
+    
+     ~ $$ g(z) = \int f(a-z) u(a) da $$    
+
+
+will result in a four-slide presentation with rendered math. Try it:
   
     $ m2d example1.md templates/plain.html "My Test" > ../deck.js/example1.html
 
