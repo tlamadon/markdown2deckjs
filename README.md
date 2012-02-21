@@ -1,6 +1,7 @@
 # markdown2deckjs
 
-Modified: Thibaut Lamadon
+Modified: Thibaut Lamadon -- Added MathJax support
+          John McDonnell -- Various cleanup
 
 Version: 0.1 | 2011/09/21
 
@@ -32,7 +33,7 @@ Install by using Pip: `pip install markdown jinja2 elementtree`
 
     $ git clone https://github.com/ulf/markdown2deckjs.git
     $ cd markdown2deckjs
-    $ ./m2d README.md templates/plain.html "Readme" > deckjs/introduction/readme.html
+    $ ./m2d README.md templates/plain.html "Readme" > readme.html
     # Look at the readme.html file in your browser. Done
 
 ## How do I create my slides?
@@ -57,7 +58,7 @@ Every time the markdown contains a H1 or H2 (#, ##), a new slide will be created
 
 will result in a four-slide presentation with rendered math. Try it:
   
-    $ m2d example1.md templates/plain.html "My Test" > deckjs/example1.html
+    $ m2d example1.md templates/plain.html "My Test" > example1.html
 
 
 ## Downloadable files
