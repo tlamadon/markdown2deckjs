@@ -2,6 +2,7 @@ import markdown
 from markdown import etree_loader
 import sys
 from elementtree.ElementTree import Element, SubElement, dump
+import re
 
 class SlideProcessor(markdown.treeprocessors.Treeprocessor):
     def create_slide(self, buf, i):
@@ -23,6 +24,20 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
             c = self.create_source(c)
         return root
 
+    def parseClass(self,content):
+      r = re.search('^\\s*~([\\w\\.]*)',content)
+      if (r!=None):
+        content = re.sub('^\\s*~([\\w\\.]*)','',content)
+        eclass = r.group(1)
+        if len(eclass)==0:
+          eclass = 'slide'
+      else:
+        eclass = None
+
+
+      return content,eclass
+
+
     def create_effects(self, root):
         #print str(root.tail)
 #        if root.tail and root.tail[-1] == '~':
@@ -31,12 +46,17 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
 #        elif root.text and root.text[-1] == '~':
 #            root.text = root.text[:-1]
 #            root.set('class', 'slide')
-        if root.tail and root.tail[0] == '~':
-            root.tail = root.tail[1:]
-            root.set('class', 'slide')
-        elif root.text and root.text[0] == '~':
-            root.text = root.text[1:]
-            root.set('class', 'slide')
+        if root.text:
+          content,eclass = self.parseClass(root.text[:])
+          if (eclass!=None):
+            root.text = content
+            root.set('class',eclass)
+        elif root.tail:
+          print 'root',root.text
+          content,eclass = self.parseClass(root.tail[:])
+          if (eclass!=None):
+            root.tail = content
+            root.set('class',eclass)
 
         for c in root:
             c = self.create_effects(c)
