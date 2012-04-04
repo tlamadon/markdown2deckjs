@@ -52,7 +52,7 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
             root.text = content
             root.set('class',eclass)
         elif root.tail:
-          print 'root',root.text
+          #print 'root',root.text
           content,eclass = self.parseClass(root.tail[:])
           if (eclass!=None):
             root.tail = content
