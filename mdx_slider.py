@@ -5,13 +5,20 @@ from elementtree.ElementTree import Element, SubElement, dump
 import re
 
 class SlideProcessor(markdown.treeprocessors.Treeprocessor):
-    def create_slide(self, buf, i):
-        cont = etree_loader.importETree().Element('div')
+
+    # method that creates the slide node
+    # from the html node
+    def create_slide(self, buf, i,name=''):
+        # creating the name of the slide
+        # by parsing the title and removing any odd character
+        slidename = re.sub('[^a-zA-Z0-9\\s]','',name)
+        slidename = re.sub('\\s','_',slidename)      
+
+        # we create a new div that will contain the slide
+        cont = Element("div") #etree_loader.importETree().Element('div')
         cont.set('class', 'slide')
-        cont.set('id', str(i))
-        i += 1
-        for b in buf:
-            cont.append(b)
+        cont.set('id', slidename)
+
         return cont
 
     def create_source(self, root):
@@ -38,21 +45,16 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
       return content,eclass
 
 
+    # method that create wihtin slide effects
+    # or nested effects
+    # it looks for the '~' character
     def create_effects(self, root):
-        #print str(root.tail)
-#        if root.tail and root.tail[-1] == '~':
-#            root.tail = root.tail[:-1]
-#            root.set('class', 'slide')
-#        elif root.text and root.text[-1] == '~':
-#            root.text = root.text[:-1]
-#            root.set('class', 'slide')
         if root.text:
           content,eclass = self.parseClass(root.text[:])
           if (eclass!=None):
             root.text = content
             root.set('class',eclass)
         elif root.tail:
-          #print 'root',root.text
           content,eclass = self.parseClass(root.tail[:])
           if (eclass!=None):
             root.tail = content
@@ -62,24 +64,31 @@ class SlideProcessor(markdown.treeprocessors.Treeprocessor):
             c = self.create_effects(c)
         return root
 
+    # parsing the tree from the root
+    # of the html document
     def run(self, root):
         root = self.create_source(root)
         root = self.create_effects(root)
         i = 1
         nodes = []
         buf = []
-        for c in root:
-            if c.tag in ('h1','h2') and len(buf) > 0:
-                nodes.append(self.create_slide(buf,i))
-                buf = []
-                i += 1
-            buf.append(c)
-        if len(buf) > 0:
-            nodes.append(self.create_slide(buf,i))
+        slide      = Element('div')
+        slide_node = Element('div')
 
-        slide = etree_loader.importETree().Element('div')
-        for n in nodes:
-            slide.append(n)
+
+        # finding and creating slides from H1 and H2
+        for c in root:
+          if c.tag in ('h1','h2'):
+            # append previous slide_node
+            if (slide_node!=None):
+              slide.append(slide_node)
+            # create a new one for this title
+            slide_node = self.create_slide(buf,i,c.text)
+            slide_node.append(c)
+          else:
+            # append this to the slide div
+            slide_node.append(c)            
+        
         return slide
 
 class slider(markdown.Extension):
